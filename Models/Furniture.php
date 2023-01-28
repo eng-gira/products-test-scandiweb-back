@@ -11,7 +11,7 @@ class Furniture extends Product {
 
     public function setAttrs(object $attrs) {
         if(!isset($attrs->h, $attrs->l, $attrs->w)) throw new \Exception('Height, width and length were expected but not found.');
-        if(!is_numeric($attrs->h) || !is_numeric($attrs->l) || !is_numeric($attrs->w)) throw new \Exception('Height, width and length were expected but not found.');
+        if(!is_numeric($attrs->h) || !is_numeric($attrs->l) || !is_numeric($attrs->w)) throw new \Exception('Height, width and length should be numeric.');
         $this->h = floatval($attrs->h);
         $this->w = floatval($attrs->w);
         $this->l = floatval($attrs->l);
