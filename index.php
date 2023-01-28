@@ -17,4 +17,4 @@ spl_autoload_register(function ($class) {
 });
 
 // Start the application
-new \Core\Application;
+\Core\Application::start();

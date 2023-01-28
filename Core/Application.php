@@ -4,6 +4,8 @@ namespace Core;
 
 class Application
 {
+    private static ?Application $application = null;
+
     private $defaultController = "ProductsController";
     private $defaultAction = "index";
     private $defaultParams = [];
@@ -12,7 +14,7 @@ class Application
     private $action = "index";
     private $params = [];
 
-    public function __construct()
+    private function __construct()
     {
         try {
             $this->readEndPoint();
@@ -52,5 +54,14 @@ class Application
         if (count($endPointArr) > 0) $this->controller = strlen($endPointArr[0]) > 0 ? \Inc\Utils::onlyFirstCharacterIsCapital($endPointArr[0]) . "Controller" : $this->defaultController;
         if (count($endPointArr) > 1) $this->action = strlen($endPointArr[1]) > 0 ? $endPointArr[1] : $this->defaultAction;
         if (count($endPointArr) > 2) $this->params = array_values(array_slice($endPointArr, 2));
+    }
+
+    public static function start() {
+        if(self::$application === null) self::$application = new Application();
+    }
+
+    public static function getInstance() {
+        if(self::$application === null) self::start();
+        return self::$application;
     }
 }
