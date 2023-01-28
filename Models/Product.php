@@ -20,13 +20,10 @@ abstract class Product {
     public static function all(): array|null {
         return null;
     }
-    public function delete(array $ids): bool {
+    public function delete(int $id): bool {
         /**
-         * @todo implement deletion here.
+         * @todo delete single product identified by the PRIMARY_KEY $id.
          */
-        foreach($ids as $id) {
-
-        }
         return false;
     }
     

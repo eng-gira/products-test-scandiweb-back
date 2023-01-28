@@ -19,7 +19,7 @@ class ProductManager {
         $this->product->setAttrs($attrs);
     }
 
-    public function deleteProductsArray(array $ids) {
+    public function deleteMultipleProducts(array $ids) {
         foreach($ids as $id) $this->product->delete($id);
     }
 
@@ -38,7 +38,7 @@ class ProductManager {
         return $this->product->save();
     }
 
-    public function allProducts(): array|false {
+    public function allProducts(): array {
         $furnitureProducts = Furniture::all() ?? [];
         $bookProducts = Book::all() ?? [];
         $dvdProducts = DVD::all() ?? [];
