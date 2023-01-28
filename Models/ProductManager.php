@@ -45,13 +45,4 @@ class ProductManager {
 
         return [...$furnitureProducts, ...$bookProducts, ...$dvdProducts];
     }
-
-    /**
-     * @param string $type Book or DVD or Furniture
-     */
-    public function setProductType(string $type) {
-        if($type != 'Book' && $type != 'DVD' && $type != 'Furniture')
-            throw new \Exception('Failed to instantiate product. Wrong type passed (' . $type . ').');
-        $this->product = new $type;
-    }
 }
