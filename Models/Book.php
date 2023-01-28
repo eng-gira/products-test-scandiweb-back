@@ -5,27 +5,18 @@ namespace Models;
 use Data\DB;
 
 class Book extends Product {
-    protected int $weight;
+    protected float $weight;
 
-    public function __construct($sku, $name, $price, $weight)
-    {
-        $this->sku = $sku;
-        $this->name = $name;
-        $this->price = $price;
-        $this->weight = $weight;
-        $this->type = 'Book';
+    public function setAttrs(object $attrs) {
+        if(!isset($attrs->weight)) throw new \Exception('Weight was expected but not found.');
+        if(!is_numeric($attrs->weight)) throw new \Exception('Weight should be numeric.');
+        $this->weight = floatval($attrs->weight);
     }
 
     public function save(): Product|false {
-        
-        if($this->skuExists($this->sku)) {
-            throw new \Exception('SKU already exists.');
-            return false;
-        }
-        if(!is_numeric($this->weight)) {
-            throw new \Exception('Weight should be numeric.');
-            return false;
-        }
+        // Testing
+        echo 'trying to save book...';
+        return false;
 
         // Proceed
         $conn = DB::connect();
@@ -44,28 +35,11 @@ class Book extends Product {
         return false;
     }
 
-    public static function all(): array|false {
-        return false;
+    public static function all(): array|null {
+        return null;
     }
    
     public static function find(int $id): Product|false {
-        return false;
-    }
-
-    public function delete(): bool {
-        return false;
-    }
-    
-    private static function skuExists($sku): bool {
-        $allProducts = self::all();
-        if ($allProducts !== false) {
-            $existingSKUs = array_map(function ($product) {
-                return $product->sku;
-            }, $allProducts);
-        }
-        if ($allProducts !== false && in_array($sku, $existingSKUs)) {
-            return true;
-        }
         return false;
     }
 }

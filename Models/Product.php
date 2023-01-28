@@ -10,14 +10,23 @@ abstract class Product {
     protected float $price;
     protected string $type;
 
-    
     public function save(): Product|false {
         return false;
     }
     public static function find(int $id): Product|false {
         return false;
     }
-    public static function all(): array|false {
+   
+    public static function all(): array|null {
+        return null;
+    }
+    public function delete(array $ids): bool {
+        /**
+         * @todo implement deletion here.
+         */
+        foreach($ids as $id) {
+
+        }
         return false;
     }
     
@@ -34,6 +43,7 @@ abstract class Product {
     public function setType(string $type) {
         $this->type = $type;
     }
+    public function setAttrs(object $attrs) {}
 
     // Getters
     public function getSKU(): string {
@@ -48,5 +58,4 @@ abstract class Product {
     public function getType(): string {
         return $this->type;
     }
-
 }
