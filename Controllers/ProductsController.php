@@ -31,8 +31,6 @@ class ProductsController {
             
             $product = $productManager->saveProduct();
       
-            var_dump('resulted prod: ');
-            var_dump($product);
             if($product === false) throw new \Exception('Failed to save the product.');
             
             http_response_code(200);

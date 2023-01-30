@@ -20,12 +20,15 @@ class Book extends Product implements Arrayable {
         $conn = DB::connect();
         $sql = "INSERT INTO products (sku, name, price, type, attrs) VALUES (?, ?, ?, ?, ?)";
         if ($stmt = $conn->prepare($sql)) {
+            
             $sku = $this->getSKU();
             $name = $this->getName();
             $price = $this->getPrice();
             $type = $this->getType();
             $attrs = $this->getWeight();
+
             $stmt->bind_param("sssss", $sku, $name, $price, $type, $attrs);
+
             if ($stmt->execute()) {
                 $book = $this;
                 $book->id = $conn->insert_id;

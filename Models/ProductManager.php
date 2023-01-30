@@ -24,6 +24,9 @@ class ProductManager {
         foreach($ids as $id) $this->product->delete($id);
     }
 
+    /**
+     * @return array|false Return inserted Product as associative array on success, and false on failure.
+     */
     public function saveProduct(): array|false {
         // Check if sku exists
         $allProducts = $this->allProducts();
