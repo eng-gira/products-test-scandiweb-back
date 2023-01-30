@@ -2,14 +2,15 @@
 
 namespace Models;
 
+use Enums\ProductType;
 
 class ProductManager {
     private Product $product;
 
-    public function __construct($sku, $name, float $price, $type, object $attrs) {
-        if($type=='Furniture') $this->product = new Furniture;
-        elseif($type=='Book') $this->product = new Book;
-        elseif($type=='DVD') $this->product = new DVD;
+    public function __construct($sku, $name, string $price, $type, object $attrs) {
+        if($type==ProductType::Furniture->name) $this->product = new Furniture;
+        elseif($type==ProductType::Book->name) $this->product = new Book;
+        elseif($type==ProductType::DVD->name) $this->product = new DVD;
         else throw new \Exception('Failed to initialize Product. Wrong type passed (' . $type .').');
 
         $this->product->setSKU($sku);
@@ -23,25 +24,25 @@ class ProductManager {
         foreach($ids as $id) $this->product->delete($id);
     }
 
-    public function saveProduct(): Product|false {
+    public function saveProduct(): array|false {
         // Check if sku exists
         $allProducts = $this->allProducts();
         if ($allProducts !== false) {
             $existingSKUs = array_map(function ($product) {
-                return $product->getSKU();
+                return $product['sku'];
             }, $allProducts);
         }
         if ($allProducts !== false && in_array($this->product->getSKU(), $existingSKUs)) {
             throw new \Exception('SKU already exists.');
         }
 
-        return $this->product->save();
+        return $this->product->save()->toArray();
     }
 
-    public function allProducts(): array {
-        $furnitureProducts = Furniture::all() ?? [];
-        $bookProducts = Book::all() ?? [];
-        $dvdProducts = DVD::all() ?? [];
+    public static function allProducts(): array {
+        $furnitureProducts = Furniture::allAsArray() ?? [];
+        $bookProducts = Book::allAsArray() ?? [];
+        $dvdProducts = DVD::allAsArray() ?? [];
 
         return [...$furnitureProducts, ...$bookProducts, ...$dvdProducts];
     }

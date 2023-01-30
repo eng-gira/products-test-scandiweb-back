@@ -14,6 +14,9 @@ class Application
     private $action = "index";
     private $params = [];
 
+    /**
+     * Private constructor since this is a singleton.
+     */
     private function __construct()
     {
         try {

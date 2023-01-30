@@ -2,13 +2,14 @@
 
 namespace Controllers;
 
+use Inc\Utils;
 use Models\ProductManager;
 use stdClass;
 
 class ProductsController {
     public static function index() {
         try {
-            echo json_encode(['data' => []]);
+            echo json_encode(['data' => ProductManager::allProducts()]);
         } catch(\Exception $e) {
             http_response_code(500);
             echo json_encode(['message' => 'failed', 'data' => $e->getMessage()]);
@@ -18,14 +19,25 @@ class ProductsController {
     
     public static function store() {
         try {
-            // Testing
+            $data = json_decode(file_get_contents("php://input"));
             $attrs = new stdClass();
-            $attrs->l = 3;
-            $attrs->w = 2;
-            $attrs->h = 1;
-            $productManager = new ProductManager('bbccdd', 'NewProd', 1.5, 'Furniture', $attrs);
-            var_dump($productManager);
-            $productManager->saveProduct();
+            $attrs->weight = $data->weight;
+            $productManager = new ProductManager(
+                $data->sku,
+                $data->name,
+                $data->price,
+                Utils::onlyFirstCharacterIsCapital($data->type),
+                $attrs);
+            
+            $product = $productManager->saveProduct();
+      
+            var_dump('resulted prod: ');
+            var_dump($product);
+            if($product === false) throw new \Exception('Failed to save the product.');
+            
+            http_response_code(200);
+            echo json_encode(['data' => $product]);
+
         } catch(\Exception $e) {
             http_response_code(500);
             echo json_encode(['message' => 'failed', 'data' => $e->getMessage()]);            

@@ -2,12 +2,13 @@
 
 namespace Models;
 
+use Contracts\Arrayable;
 
-abstract class Product {
+abstract class Product implements Arrayable {
     protected int $id;
     protected string $sku;
     protected string $name;
-    protected float $price;
+    protected string $price;
     protected string $type;
 
     public function save(): Product|false {
@@ -17,24 +18,32 @@ abstract class Product {
         return false;
     }
    
-    public static function all(): array|null {
+    public static function allAsArray(): array|null {
         return null;
     }
+
     public function delete(int $id): bool {
         /**
          * @todo delete single product identified by the PRIMARY_KEY $id.
          */
         return false;
     }
+
+    public function toArray(): array {
+        return [];
+    }
     
     // Setters
+    public function setId(int $id) {
+        $this->id = $id;
+    }
     public function setSKU(string $sku) {
         $this->sku = $sku;
     }
     public function setName(string $name) {
         $this->name = $name;
     }
-    public function setPrice(float $price) {
+    public function setPrice(string $price) {
         $this->price = $price;
     }
     public function setType(string $type) {
@@ -43,13 +52,16 @@ abstract class Product {
     public function setAttrs(object $attrs) {}
 
     // Getters
+    public function getId(): int {
+        return $this->id;
+    }
     public function getSKU(): string {
         return $this->sku;
     }
     public function getName(): string {
         return $this->name;
     }
-    public function getPrice(): float {
+    public function getPrice(): string {
         return $this->price;
     }
     public function getType(): string {
