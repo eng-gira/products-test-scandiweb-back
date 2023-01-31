@@ -10,7 +10,7 @@ class ProductManager {
     public function __construct($sku, $name, string $price, $type, object $attrs) {
         if($type==ProductType::Furniture->name) $this->product = new Furniture;
         elseif($type==ProductType::Book->name) $this->product = new Book;
-        elseif($type==ProductType::DVD->name) $this->product = new DVD;
+        elseif($type==ProductType::Dvd->name) $this->product = new Dvd;
         else throw new \Exception('Failed to initialize Product. Wrong type passed (' . $type .').');
 
         $this->product->setSKU($sku);
@@ -45,7 +45,7 @@ class ProductManager {
     public static function allProducts(): array {
         $furnitureProducts = Furniture::allAsArray() ?? [];
         $bookProducts = Book::allAsArray() ?? [];
-        $dvdProducts = DVD::allAsArray() ?? [];
+        $dvdProducts = Dvd::allAsArray() ?? [];
 
         return [...$furnitureProducts, ...$bookProducts, ...$dvdProducts];
     }

@@ -20,14 +20,12 @@ class ProductsController {
     public static function store() {
         try {
             $data = json_decode(file_get_contents("php://input"));
-            $attrs = new stdClass();
-            $attrs->weight = $data->weight;
             $productManager = new ProductManager(
                 $data->sku,
                 $data->name,
                 $data->price,
                 Utils::onlyFirstCharacterIsCapital($data->type),
-                $attrs);
+                $data->attrs);
             
             $product = $productManager->saveProduct();
       

@@ -3,6 +3,8 @@
 namespace Models;
 
 use Contracts\Arrayable;
+use Data\DB;
+use Enums\ProductType;
 
 class Furniture extends Product implements Arrayable {
     protected string $h;
@@ -19,9 +21,61 @@ class Furniture extends Product implements Arrayable {
     }
 
     public function save(): Product|false {
-        // Test
-        echo 'Trying to save Furniture.';
+        // Proceed
+        $conn = DB::connect();
+        $sql = "INSERT INTO products (sku, name, price, type, attrs) VALUES (?, ?, ?, ?, ?)";
+        if ($stmt = $conn->prepare($sql)) {
+            
+            $sku = $this->getSKU();
+            $name = $this->getName();
+            $price = $this->getPrice();
+            $type = $this->getType();
+            $attrs = implode(',', [$this->getH(), $this->getW(), $this->getL()]);
+
+            $stmt->bind_param("sssss", $sku, $name, $price, $type, $attrs);
+
+            if ($stmt->execute()) {
+                $furniture = $this;
+                $furniture->id = $conn->insert_id;
+
+                return $furniture;
+            }
+        }
+
+        throw new \Exception('Failed to save Furniture product.');
         return false;
+    }
+
+    public static function allAsArray(): ?array
+    {
+             // Proceed
+             $conn = DB::connect();
+             $type = ProductType::Furniture->name;
+             $sql = "SELECT * FROM products WHERE type = '$type'";
+             $res = $conn->query($sql);
+             if ($res->num_rows != 0) {
+                 $furnitures = [];
+                 while ($row = $res->fetch_assoc()) {
+                    $furniture = new Furniture();
+                    $furniture->setId($row['id']);
+                    $furniture->setSKU($row['sku']);
+                    $furniture->setName($row['name']);
+                    $furniture->setType($row['type']);
+                    $furniture->setPrice($row['price']);
+                    $attrsArr = explode(',', $row['attrs']);
+                    $furniture->setH($attrsArr[0]);
+                    $furniture->setW($attrsArr[1]);
+                    $furniture->setL($attrsArr[2]);
+                    array_push($furnitures, $furniture->toArray());
+                 }
+     
+                 return $furnitures;
+             } else {
+                 return [];
+             }
+     
+            throw new \Exception('Failed to get Furniture products.');
+            return null;   
     }
 
     public function setH($h) { $this->h = $h; }

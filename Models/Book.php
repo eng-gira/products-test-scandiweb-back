@@ -37,7 +37,7 @@ class Book extends Product implements Arrayable {
             }
         }
 
-        throw new \Exception('Failed to saved book.');
+        throw new \Exception('Failed to save Book product.');
         return false;
     }
 
@@ -65,7 +65,7 @@ class Book extends Product implements Arrayable {
             return [];
         }
 
-        throw new \Exception('Failed to get books.');
+        throw new \Exception('Failed to get Book products.');
         return null;
     }
     public function getWeight(): string {
