@@ -4,7 +4,7 @@ namespace Models;
 
 use Enums\ProductType;
 
-class ProductManager {
+class ProductFacade {
     private Product $product;
 
     public function __construct($sku, $name, string $price, $type, object $attrs) {
