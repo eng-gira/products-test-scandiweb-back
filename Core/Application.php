@@ -23,17 +23,18 @@ class Application
             $this->readEndPoint();
 
             if(!file_exists(CONTROLLER . $this->controller . ".php")) throw new \Exception("Controller does not exist.");
+            if(!method_exists('\Controllers\\' . $this->controller, $this->action)) throw new \Exception("Action does not exist.");
 
+            $controller = "\Controllers\\" . $this->controller;
+            $action = $this->action;
+            $params = $this->params;
+            $controller::$action(...$params);
+            
         } catch(\Exception $e) {
             echo json_encode(['message' => 'failed', 'data' => $e->getMessage()]);
             http_response_code(404);
             return false;
         }
-
-        $controller = "\Controllers\\" . $this->controller;
-        $action = $this->action;
-        $params = $this->params;
-        $controller::$action(...$params);
     }
 
     private function readEndPoint()

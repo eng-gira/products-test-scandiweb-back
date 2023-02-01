@@ -3,6 +3,7 @@
 namespace Models;
 
 use Contracts\Arrayable;
+use Data\DB;
 
 abstract class Product implements Arrayable {
     protected int $id;
@@ -22,10 +23,17 @@ abstract class Product implements Arrayable {
         return null;
     }
 
-    public function delete(int $id): bool {
+    public static function delete(int $id): bool {
         /**
          * @todo delete single product identified by the PRIMARY_KEY $id.
          */
+        $conn = DB::connect();
+        $query = 'DELETE FROM products WHERE id = ?';
+        if($stmt=$conn->prepare($query)) {
+            $stmt->bind_param('i', $id);
+            return $stmt->execute();
+        }
+
         return false;
     }
 

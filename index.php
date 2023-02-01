@@ -16,5 +16,12 @@ spl_autoload_register(function ($class) {
     require str_replace('\\', '/', $class) . '.php';
 });
 
+// Error Handling
+function errorHandler($errno, $errstr, $errfile, $errline ) {
+    throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
+    return true;
+}
+set_error_handler('errorHandler');
+
 // Start the application
 \Core\Application::start();

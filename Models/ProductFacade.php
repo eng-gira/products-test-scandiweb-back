@@ -20,8 +20,9 @@ class ProductFacade {
         $this->product->setAttrs($attrs);
     }
 
-    public function deleteMultipleProducts(array $ids) {
-        foreach($ids as $id) $this->product->delete($id);
+    public static function deleteMultipleProducts(array $ids) {
+        foreach($ids as $id) if(!Product::delete($id)) return false;
+        return true;
     }
 
     /**

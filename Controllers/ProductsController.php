@@ -39,4 +39,19 @@ class ProductsController {
             echo json_encode(['message' => 'failed', 'data' => $e->getMessage()]);            
         }
     }
+
+    public static function massDelete() {
+        try{
+            $data = json_decode(file_get_contents("php://input"));
+            if(ProductFacade::deleteMultipleProducts($data)) {
+                http_response_code(200);
+                echo json_encode(['message' => 'success', 'data' => 'Product(s) deleted successfully.']);
+            } 
+            else throw new \Exception('Delete attempt failed.');
+        }
+        catch(\Exception $e) {
+            http_response_code(500);
+            echo json_encode(['message' => 'failed', 'data' => $e->getMessage()]);
+        }
+    }
 }
