@@ -5,18 +5,19 @@ namespace Models;
 use Data\DB;
 use stdClass;
 
-class Furniture extends Product {
+class Furniture extends Product
+{
     protected string $height;
     protected string $width;
     protected string $length;
 
-    public function setAttrs(string|object $attrs) {
-        if(!is_object($attrs)) {
+    public function setAttrs(string|object $attrs)
+    {
+        if (!is_object($attrs)) {
             $attrsObject = new stdClass();
             $attrsArr = explode(',', $attrs);
-            
-            if(count($attrsArr) < 3) 
-            {
+
+            if (count($attrsArr) < 3) {
                 throw new \Exception('Height, width and length were expected but not found.');
             }
 
@@ -25,27 +26,27 @@ class Furniture extends Product {
             $attrsObject->length = $attrsArr[2];
         } else {
             $attrsObject = $attrs;
-            if(!isset($attrsObject->height, $attrsObject->length, $attrsObject->width)) 
-            {
+            if (!isset($attrsObject->height, $attrsObject->length, $attrsObject->width)) {
                 throw new \Exception('Height, width and length were expected but not found.');
             }
         }
-        if(!is_numeric($attrsObject->height) || !is_numeric($attrsObject->length) || !is_numeric($attrsObject->width)) 
+        if (!is_numeric($attrsObject->height) || !is_numeric($attrsObject->length) || !is_numeric($attrsObject->width)) {
             throw new \Exception('Height, width and length should be numeric.');
+        }
 
         $this->setHeight($attrsObject->height);
         $this->setWidth($attrsObject->width);
         $this->setLength($attrsObject->length);
     }
 
-    public function save(): Product|false {
+    public function save(): Product|false
+    {
         parent::failIfSkuExists($this->getSku());
 
         // Proceed
         $conn = DB::connect();
         $sql = "INSERT INTO products (sku, name, price, type, attrs) VALUES (?, ?, ?, ?, ?)";
         if ($stmt = $conn->prepare($sql)) {
-            
             $sku = $this->getSku();
             $name = $this->getName();
             $price = $this->getPrice();
@@ -66,12 +67,30 @@ class Furniture extends Product {
         return false;
     }
 
-    public function setHeight($height) { $this->height = $height; }
-    public function setWidth($width) { $this->width = $width; }
-    public function setLength($length) { $this->length = $length; }
-    public function getHeight(): string { return $this->height; }
-    public function getWidth(): string { return $this->width; }
-    public function getLength(): string { return $this->length; }
+    public function setHeight($height)
+    {
+        $this->height = $height;
+    }
+    public function setWidth($width)
+    {
+        $this->width = $width;
+    }
+    public function setLength($length)
+    {
+        $this->length = $length;
+    }
+    public function getHeight(): string
+    {
+        return $this->height;
+    }
+    public function getWidth(): string
+    {
+        return $this->width;
+    }
+    public function getLength(): string
+    {
+        return $this->length;
+    }
 
     public function toArray(): array
     {

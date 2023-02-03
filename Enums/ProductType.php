@@ -2,7 +2,8 @@
 
 namespace Enums;
 
-enum ProductType {
+enum ProductType
+{
     case Book;
     case Furniture;
     case Dvd;

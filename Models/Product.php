@@ -6,18 +6,21 @@ use Contracts\Arrayable;
 use Data\DB;
 use Factories\ProductFactory;
 
-abstract class Product implements Arrayable {
+abstract class Product implements Arrayable
+{
     protected int $id;
     protected string $sku;
     protected string $name;
     protected string $price;
     protected string $type;
 
-    public function save(): Product|false {
+    public function save(): Product|false
+    {
         return false;
     }
 
-    public static function all(): array|false {
+    public static function all(): array|false
+    {
         $conn = DB::connect();
         $sql = "SELECT * FROM products";
         $res = $conn->query($sql);
@@ -45,10 +48,11 @@ abstract class Product implements Arrayable {
         return false;
     }
 
-    public static function delete(int $id): bool {
+    public static function delete(int $id): bool
+    {
         $conn = DB::connect();
         $query = 'DELETE FROM products WHERE id = ?';
-        if($stmt=$conn->prepare($query)) {
+        if ($stmt=$conn->prepare($query)) {
             $stmt->bind_param('i', $id);
             return $stmt->execute();
         }
@@ -56,14 +60,16 @@ abstract class Product implements Arrayable {
         return false;
     }
 
-    public function toArray(): array {
+    public function toArray(): array
+    {
         return [];
     }
-    
-    protected static function failIfSkuExists(string $sku) {
+
+    protected static function failIfSkuExists(string $sku)
+    {
         $conn = DB::connect();
         $query = 'SELECT * FROM products WHERE sku = ?';
-        if($stmt=$conn->prepare($query)) {
+        if ($stmt=$conn->prepare($query)) {
             $stmt->bind_param('s', $sku);
             if ($stmt->execute()) {
                 $stmt->store_result();
@@ -75,37 +81,49 @@ abstract class Product implements Arrayable {
     }
 
     // Setters
-    public function setId(int $id) {
+    public function setId(int $id)
+    {
         $this->id = $id;
     }
-    public function setSku(string $sku) {
+    public function setSku(string $sku)
+    {
         $this->sku = $sku;
     }
-    public function setName(string $name) {
+    public function setName(string $name)
+    {
         $this->name = $name;
     }
-    public function setPrice(string $price) {
+    public function setPrice(string $price)
+    {
         $this->price = $price;
     }
-    public function setType(string $type) {
+    public function setType(string $type)
+    {
         $this->type = $type;
     }
-    public function setAttrs(string|object $attrs) {}
+    public function setAttrs(string|object $attrs)
+    {
+    }
 
     // Getters
-    public function getId(): int {
+    public function getId(): int
+    {
         return $this->id;
     }
-    public function getSku(): string {
+    public function getSku(): string
+    {
         return $this->sku;
     }
-    public function getName(): string {
+    public function getName(): string
+    {
         return $this->name;
     }
-    public function getPrice(): string {
+    public function getPrice(): string
+    {
         return $this->price;
     }
-    public function getType(): string {
+    public function getType(): string
+    {
         return $this->type;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Data;
 
-use \Core\Env;
+use Core\Env;
 
 class DB
 {

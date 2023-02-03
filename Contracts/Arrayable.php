@@ -2,7 +2,7 @@
 
 namespace Contracts;
 
-
-interface Arrayable {
+interface Arrayable
+{
     public function toArray(): array;
 }

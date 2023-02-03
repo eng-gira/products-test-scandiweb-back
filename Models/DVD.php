@@ -5,31 +5,37 @@ namespace Models;
 use Data\DB;
 use stdClass;
 
-class Dvd extends Product {
+class Dvd extends Product
+{
     protected string $size;
 
-    public function setAttrs(string|object $attrs) {
-        if(!is_object($attrs)) {
+    public function setAttrs(string|object $attrs)
+    {
+        if (!is_object($attrs)) {
             $attrsObject = new stdClass();
             $attrsObject->size = $attrs;
         } else {
             $attrsObject = $attrs;
         }
 
-        if(!isset($attrsObject->size)) throw new \Exception('Size was expected but not found.');
-        if(!is_numeric($attrsObject->size)) throw new \Exception('Size should be numeric.');
+        if (!isset($attrsObject->size)) {
+            throw new \Exception('Size was expected but not found.');
+        }
+        if (!is_numeric($attrsObject->size)) {
+            throw new \Exception('Size should be numeric.');
+        }
 
         $this->setSize($attrsObject->size);
     }
 
-    public function save(): Product|false {
+    public function save(): Product|false
+    {
         parent::failIfSkuExists($this->getSku());
 
         // Proceed
         $conn = DB::connect();
         $sql = "INSERT INTO products (sku, name, price, type, attrs) VALUES (?, ?, ?, ?, ?)";
         if ($stmt = $conn->prepare($sql)) {
-            
             $sku = $this->getSku();
             $name = $this->getName();
             $price = $this->getPrice();
@@ -50,10 +56,12 @@ class Dvd extends Product {
         return false;
     }
 
-    public function getSize(): string {
+    public function getSize(): string
+    {
         return $this->size;
     }
-    public function setSize(string $size) {
+    public function setSize(string $size)
+    {
         $this->size = $size;
     }
 
