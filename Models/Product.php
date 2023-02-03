@@ -4,7 +4,6 @@ namespace Models;
 
 use Contracts\Arrayable;
 use Data\DB;
-use Facades\ProductFacade;
 use Factories\ProductFactory;
 
 abstract class Product implements Arrayable {
