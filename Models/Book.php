@@ -4,7 +4,6 @@ namespace Models;
 
 use Contracts\Arrayable;
 use Data\DB;
-use Enums\ProductType;
 use stdClass;
 
 class Book extends Product implements Arrayable {
@@ -52,33 +51,6 @@ class Book extends Product implements Arrayable {
         return false;
     }
 
-    // public static function allAsArray(): array|null {
-    //     // Proceed
-    //     $conn = DB::connect();
-    //     $type = ProductType::Book->name;
-    //     $sql = "SELECT * FROM products WHERE type = '$type'";
-    //     $res = $conn->query($sql);
-    //     if ($res->num_rows != 0) {
-    //         $books = [];
-    //         while ($row = $res->fetch_assoc()) {
-    //             $book = new Book();
-    //             $book->setId($row['id']);
-    //             $book->setSku($row['sku']);
-    //             $book->setName($row['name']);
-    //             $book->setType($row['type']);
-    //             $book->setPrice($row['price']);
-    //             $book->setWeight($row['attrs']);
-    //             array_push($books, $book->toArray());
-    //         }
-
-    //         return $books;
-    //     } else {
-    //         return [];
-    //     }
-
-    //     throw new \Exception('Failed to get Book products.');
-    //     return null;
-    // }
     public function getWeight(): string {
         return $this->weight;
     }

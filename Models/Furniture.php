@@ -4,7 +4,6 @@ namespace Models;
 
 use Contracts\Arrayable;
 use Data\DB;
-use Enums\ProductType;
 use stdClass;
 
 class Furniture extends Product implements Arrayable {
@@ -67,38 +66,6 @@ class Furniture extends Product implements Arrayable {
         throw new \Exception('Failed to save Furniture product.');
         return false;
     }
-
-    // public static function allAsArray(): ?array
-    // {
-    //          // Proceed
-    //          $conn = DB::connect();
-    //          $type = ProductType::Furniture->name;
-    //          $sql = "SELECT * FROM products WHERE type = '$type'";
-    //          $res = $conn->query($sql);
-    //          if ($res->num_rows != 0) {
-    //              $furnitures = [];
-    //              while ($row = $res->fetch_assoc()) {
-    //                 $furniture = new Furniture();
-    //                 $furniture->setId($row['id']);
-    //                 $furniture->setSku($row['sku']);
-    //                 $furniture->setName($row['name']);
-    //                 $furniture->setType($row['type']);
-    //                 $furniture->setPrice($row['price']);
-    //                 $attrsArr = explode(',', $row['attrs']);
-    //                 $furniture->setHeight($attrsArr[0]);
-    //                 $furniture->setWidth($attrsArr[1]);
-    //                 $furniture->setLength($attrsArr[2]);
-    //                 array_push($furnitures, $furniture->toArray());
-    //              }
-     
-    //              return $furnitures;
-    //          } else {
-    //              return [];
-    //          }
-     
-    //         throw new \Exception('Failed to get Furniture products.');
-    //         return null;   
-    // }
 
     public function setHeight($height) { $this->height = $height; }
     public function setWidth($width) { $this->width = $width; }

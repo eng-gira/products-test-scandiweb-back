@@ -4,7 +4,6 @@ namespace Models;
 
 use Contracts\Arrayable;
 use Data\DB;
-use Enums\ProductType;
 use stdClass;
 
 class Dvd extends Product implements Arrayable {
@@ -51,34 +50,6 @@ class Dvd extends Product implements Arrayable {
         throw new \Exception('Failed to save DVD product.');
         return false;
     }
-
-    // public static function allAsArray(): array|null {
-    //     // Proceed
-    //     $conn = DB::connect();
-    //     $type = ProductType::Dvd->name;
-    //     $sql = "SELECT * FROM products WHERE type = '$type'";
-    //     $res = $conn->query($sql);
-    //     if ($res->num_rows != 0) {
-    //         $dvds = [];
-    //         while ($row = $res->fetch_assoc()) {
-    //             $dvd = new Dvd();
-    //             $dvd->setId($row['id']);
-    //             $dvd->setSku($row['sku']);
-    //             $dvd->setName($row['name']);
-    //             $dvd->setType($row['type']);
-    //             $dvd->setPrice($row['price']);
-    //             $dvd->setSize($row['attrs']);
-    //             array_push($dvds, $dvd->toArray());
-    //         }
-
-    //         return $dvds;
-    //     } else {
-    //         return [];
-    //     }
-
-    //     throw new \Exception('Failed to get DVD products.');
-    //     return null;
-    // }
 
     public function getSize(): string {
         return $this->size;
