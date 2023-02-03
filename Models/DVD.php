@@ -5,15 +5,23 @@ namespace Models;
 use Contracts\Arrayable;
 use Data\DB;
 use Enums\ProductType;
+use stdClass;
 
 class Dvd extends Product implements Arrayable {
     protected string $size;
 
-    public function setAttrs(object $attrs) {
-        if(!isset($attrs->size)) throw new \Exception('Size was expected but not found.');
-        if(!is_numeric($attrs->size)) throw new \Exception('Size should be numeric.');
+    public function setAttrs(string|object $attrs) {
+        if(!is_object($attrs)) {
+            $attrsObject = new stdClass();
+            $attrsObject->size = $attrs;
+        } else {
+            $attrsObject = $attrs;
+        }
 
-        $this->setSize($attrs->size);
+        if(!isset($attrsObject->size)) throw new \Exception('Size was expected but not found.');
+        if(!is_numeric($attrsObject->size)) throw new \Exception('Size should be numeric.');
+
+        $this->setSize($attrsObject->size);
     }
 
     public function save(): Product|false {
@@ -42,38 +50,38 @@ class Dvd extends Product implements Arrayable {
         return false;
     }
 
-    public static function allAsArray(): array|null {
-        // Proceed
-        $conn = DB::connect();
-        $type = ProductType::Dvd->name;
-        $sql = "SELECT * FROM products WHERE type = '$type'";
-        $res = $conn->query($sql);
-        if ($res->num_rows != 0) {
-            $dvds = [];
-            while ($row = $res->fetch_assoc()) {
-                $dvd = new Dvd();
-                $dvd->setId($row['id']);
-                $dvd->setSKU($row['sku']);
-                $dvd->setName($row['name']);
-                $dvd->setType($row['type']);
-                $dvd->setPrice($row['price']);
-                $dvd->setSize($row['attrs']);
-                array_push($dvds, $dvd->toArray());
-            }
+    // public static function allAsArray(): array|null {
+    //     // Proceed
+    //     $conn = DB::connect();
+    //     $type = ProductType::Dvd->name;
+    //     $sql = "SELECT * FROM products WHERE type = '$type'";
+    //     $res = $conn->query($sql);
+    //     if ($res->num_rows != 0) {
+    //         $dvds = [];
+    //         while ($row = $res->fetch_assoc()) {
+    //             $dvd = new Dvd();
+    //             $dvd->setId($row['id']);
+    //             $dvd->setSKU($row['sku']);
+    //             $dvd->setName($row['name']);
+    //             $dvd->setType($row['type']);
+    //             $dvd->setPrice($row['price']);
+    //             $dvd->setSize($row['attrs']);
+    //             array_push($dvds, $dvd->toArray());
+    //         }
 
-            return $dvds;
-        } else {
-            return [];
-        }
+    //         return $dvds;
+    //     } else {
+    //         return [];
+    //     }
 
-        throw new \Exception('Failed to get DVD products.');
-        return null;
-    }
+    //     throw new \Exception('Failed to get DVD products.');
+    //     return null;
+    // }
 
     public function getSize(): string {
         return $this->size;
     }
-    public function setSize($size) {
+    public function setSize(string $size) {
         $this->size = $size;
     }
 

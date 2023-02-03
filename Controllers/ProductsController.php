@@ -2,8 +2,9 @@
 
 namespace Controllers;
 
+use Facades\ProductFacade;
+use Factories\ProductFactory;
 use Inc\Utils;
-use Models\ProductFacade;
 use stdClass;
 
 class ProductsController {
@@ -20,19 +21,20 @@ class ProductsController {
     public static function store() {
         try {
             $data = json_decode(file_get_contents("php://input"));
-            $productManager = new ProductFacade(
+            $product = ProductFactory::factory(
+                null,
                 $data->sku,
                 $data->name,
                 $data->price,
                 Utils::onlyFirstCharacterIsCapital($data->type),
                 $data->attrs);
             
-            $product = $productManager->saveProduct();
+            ProductFacade::saveProduct($product);
       
             if($product === false) throw new \Exception('Failed to save the product.');
             
             http_response_code(200);
-            echo json_encode(['data' => $product]);
+            echo json_encode(['data' => $product->toArray()]);
 
         } catch(\Exception $e) {
             http_response_code(500);

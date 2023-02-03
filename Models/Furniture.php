@@ -5,19 +5,39 @@ namespace Models;
 use Contracts\Arrayable;
 use Data\DB;
 use Enums\ProductType;
+use stdClass;
 
 class Furniture extends Product implements Arrayable {
-    protected string $h;
-    protected string $w;
-    protected string $l;
+    protected string $height;
+    protected string $width;
+    protected string $length;
 
+    public function setAttrs(string|object $attrs) {
+        if(!is_object($attrs)) {
+            $attrsObject = new stdClass();
+            $attrsArr = explode(',', $attrs);
+            
+            if(count($attrsArr) < 3) 
+            {
+                throw new \Exception('Height, width and length were expected but not found.');
+            }
 
-    public function setAttrs(object $attrs) {
-        if(!isset($attrs->h, $attrs->l, $attrs->w)) throw new \Exception('Height, width and length were expected but not found.');
-        if(!is_numeric($attrs->h) || !is_numeric($attrs->l) || !is_numeric($attrs->w)) throw new \Exception('Height, width and length should be numeric.');
-        $this->setH($attrs->h);
-        $this->setW($attrs->w);
-        $this->setL($attrs->l);
+            $attrsObject->height = $attrsArr[0];
+            $attrsObject->width = $attrsArr[1];
+            $attrsObject->length = $attrsArr[2];
+        } else {
+            $attrsObject = $attrs;
+            if(!isset($attrsObject->height, $attrsObject->length, $attrsObject->width)) 
+            {
+                throw new \Exception('Height, width and length were expected but not found.');
+            }
+        }
+        if(!is_numeric($attrsObject->height) || !is_numeric($attrsObject->length) || !is_numeric($attrsObject->width)) 
+            throw new \Exception('Height, width and length should be numeric.');
+
+        $this->setHeight($attrsObject->height);
+        $this->setWidth($attrsObject->width);
+        $this->setLength($attrsObject->length);
     }
 
     public function save(): Product|false {
@@ -30,7 +50,7 @@ class Furniture extends Product implements Arrayable {
             $name = $this->getName();
             $price = $this->getPrice();
             $type = $this->getType();
-            $attrs = implode(',', [$this->getH(), $this->getW(), $this->getL()]);
+            $attrs = implode(',', [$this->getHeight(), $this->getWidth(), $this->getLength()]);
 
             $stmt->bind_param("sssss", $sku, $name, $price, $type, $attrs);
 
@@ -46,44 +66,44 @@ class Furniture extends Product implements Arrayable {
         return false;
     }
 
-    public static function allAsArray(): ?array
-    {
-             // Proceed
-             $conn = DB::connect();
-             $type = ProductType::Furniture->name;
-             $sql = "SELECT * FROM products WHERE type = '$type'";
-             $res = $conn->query($sql);
-             if ($res->num_rows != 0) {
-                 $furnitures = [];
-                 while ($row = $res->fetch_assoc()) {
-                    $furniture = new Furniture();
-                    $furniture->setId($row['id']);
-                    $furniture->setSKU($row['sku']);
-                    $furniture->setName($row['name']);
-                    $furniture->setType($row['type']);
-                    $furniture->setPrice($row['price']);
-                    $attrsArr = explode(',', $row['attrs']);
-                    $furniture->setH($attrsArr[0]);
-                    $furniture->setW($attrsArr[1]);
-                    $furniture->setL($attrsArr[2]);
-                    array_push($furnitures, $furniture->toArray());
-                 }
+    // public static function allAsArray(): ?array
+    // {
+    //          // Proceed
+    //          $conn = DB::connect();
+    //          $type = ProductType::Furniture->name;
+    //          $sql = "SELECT * FROM products WHERE type = '$type'";
+    //          $res = $conn->query($sql);
+    //          if ($res->num_rows != 0) {
+    //              $furnitures = [];
+    //              while ($row = $res->fetch_assoc()) {
+    //                 $furniture = new Furniture();
+    //                 $furniture->setId($row['id']);
+    //                 $furniture->setSKU($row['sku']);
+    //                 $furniture->setName($row['name']);
+    //                 $furniture->setType($row['type']);
+    //                 $furniture->setPrice($row['price']);
+    //                 $attrsArr = explode(',', $row['attrs']);
+    //                 $furniture->setHeight($attrsArr[0]);
+    //                 $furniture->setWidth($attrsArr[1]);
+    //                 $furniture->setLength($attrsArr[2]);
+    //                 array_push($furnitures, $furniture->toArray());
+    //              }
      
-                 return $furnitures;
-             } else {
-                 return [];
-             }
+    //              return $furnitures;
+    //          } else {
+    //              return [];
+    //          }
      
-            throw new \Exception('Failed to get Furniture products.');
-            return null;   
-    }
+    //         throw new \Exception('Failed to get Furniture products.');
+    //         return null;   
+    // }
 
-    public function setH($h) { $this->h = $h; }
-    public function setW($w) { $this->w = $w; }
-    public function setL($l) { $this->l = $l; }
-    public function getH(): string { return $this->h; }
-    public function getW(): string { return $this->w; }
-    public function getL(): string { return $this->l; }
+    public function setHeight($height) { $this->height = $height; }
+    public function setWidth($width) { $this->width = $width; }
+    public function setLength($length) { $this->length = $length; }
+    public function getHeight(): string { return $this->height; }
+    public function getWidth(): string { return $this->width; }
+    public function getLength(): string { return $this->length; }
 
     public function toArray(): array
     {
@@ -93,9 +113,9 @@ class Furniture extends Product implements Arrayable {
             'name' => $this->getName(),
             'price' => $this->getPrice(),
             'type' => $this->getType(),
-            'h' => $this->getH(),
-            'w' => $this->getW(),
-            'l' => $this->getL(),
+            'height' => $this->getHeight(),
+            'width' => $this->getWidth(),
+            'length' => $this->getLength(),
         ];
     }
 }

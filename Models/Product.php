@@ -4,6 +4,8 @@ namespace Models;
 
 use Contracts\Arrayable;
 use Data\DB;
+use Facades\ProductFacade;
+use Factories\ProductFactory;
 
 abstract class Product implements Arrayable {
     protected int $id;
@@ -19,14 +21,40 @@ abstract class Product implements Arrayable {
         return false;
     }
    
-    public static function allAsArray(): array|null {
-        return null;
+    /**
+     * @return array All as array to be converted to JSON for responses.
+     */
+    public static function allAsArray(): array|false {
+        $conn = DB::connect();
+        $sql = "SELECT * FROM products";
+        $res = $conn->query($sql);
+        if ($res->num_rows != 0) {
+            $products = [];
+            while ($row = $res->fetch_assoc()) {
+                $product = ProductFactory::factory(
+                    $row['id'],
+                    $row['sku'],
+                    $row['name'],
+                    $row['price'],
+                    $row['type'],
+                    $row['attrs']
+                );
+
+                $productArr = $product->toArray();
+
+                array_push($products, $productArr);
+            }
+
+            return $products;
+        } else {
+            return [];
+        }
+
+        throw new \Exception('Failed to get all products.');
+        return false;
     }
 
     public static function delete(int $id): bool {
-        /**
-         * @todo delete single product identified by the PRIMARY_KEY $id.
-         */
         $conn = DB::connect();
         $query = 'DELETE FROM products WHERE id = ?';
         if($stmt=$conn->prepare($query)) {
@@ -35,6 +63,10 @@ abstract class Product implements Arrayable {
         }
 
         return false;
+    }
+    
+    public static function orgAttrs(array $productAsArray): array {
+        return [];
     }
 
     public function toArray(): array {
@@ -57,7 +89,7 @@ abstract class Product implements Arrayable {
     public function setType(string $type) {
         $this->type = $type;
     }
-    public function setAttrs(object $attrs) {}
+    public function setAttrs(string|object $attrs) {}
 
     // Getters
     public function getId(): int {
