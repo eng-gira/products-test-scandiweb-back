@@ -2,11 +2,10 @@
 
 namespace Models;
 
-use Contracts\Arrayable;
 use Data\DB;
 use stdClass;
 
-class Furniture extends Product implements Arrayable {
+class Furniture extends Product {
     protected string $height;
     protected string $width;
     protected string $length;

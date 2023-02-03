@@ -2,11 +2,10 @@
 
 namespace Models;
 
-use Contracts\Arrayable;
 use Data\DB;
 use stdClass;
 
-class Dvd extends Product implements Arrayable {
+class Dvd extends Product {
     protected string $size;
 
     public function setAttrs(string|object $attrs) {
