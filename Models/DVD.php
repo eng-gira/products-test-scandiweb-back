@@ -25,12 +25,14 @@ class Dvd extends Product implements Arrayable {
     }
 
     public function save(): Product|false {
+        parent::failIfSkuExists($this->getSku());
+
         // Proceed
         $conn = DB::connect();
         $sql = "INSERT INTO products (sku, name, price, type, attrs) VALUES (?, ?, ?, ?, ?)";
         if ($stmt = $conn->prepare($sql)) {
             
-            $sku = $this->getSKU();
+            $sku = $this->getSku();
             $name = $this->getName();
             $price = $this->getPrice();
             $type = $this->getType();
@@ -61,7 +63,7 @@ class Dvd extends Product implements Arrayable {
     //         while ($row = $res->fetch_assoc()) {
     //             $dvd = new Dvd();
     //             $dvd->setId($row['id']);
-    //             $dvd->setSKU($row['sku']);
+    //             $dvd->setSku($row['sku']);
     //             $dvd->setName($row['name']);
     //             $dvd->setType($row['type']);
     //             $dvd->setPrice($row['price']);
@@ -89,7 +91,7 @@ class Dvd extends Product implements Arrayable {
     {
         return [
             'id' => $this->getId(),
-            'sku' => $this->getSKU(),
+            'sku' => $this->getSku(),
             'name' => $this->getName(),
             'price' => $this->getPrice(),
             'type' => $this->getType(),

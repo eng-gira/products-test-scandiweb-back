@@ -41,12 +41,14 @@ class Furniture extends Product implements Arrayable {
     }
 
     public function save(): Product|false {
+        parent::failIfSkuExists($this->getSku());
+
         // Proceed
         $conn = DB::connect();
         $sql = "INSERT INTO products (sku, name, price, type, attrs) VALUES (?, ?, ?, ?, ?)";
         if ($stmt = $conn->prepare($sql)) {
             
-            $sku = $this->getSKU();
+            $sku = $this->getSku();
             $name = $this->getName();
             $price = $this->getPrice();
             $type = $this->getType();
@@ -78,7 +80,7 @@ class Furniture extends Product implements Arrayable {
     //              while ($row = $res->fetch_assoc()) {
     //                 $furniture = new Furniture();
     //                 $furniture->setId($row['id']);
-    //                 $furniture->setSKU($row['sku']);
+    //                 $furniture->setSku($row['sku']);
     //                 $furniture->setName($row['name']);
     //                 $furniture->setType($row['type']);
     //                 $furniture->setPrice($row['price']);
@@ -109,7 +111,7 @@ class Furniture extends Product implements Arrayable {
     {
         return [
             'id' => $this->getId(),
-            'sku' => $this->getSKU(),
+            'sku' => $this->getSku(),
             'name' => $this->getName(),
             'price' => $this->getPrice(),
             'type' => $this->getType(),

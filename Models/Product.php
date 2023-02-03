@@ -17,10 +17,7 @@ abstract class Product implements Arrayable {
     public function save(): Product|false {
         return false;
     }
-    public static function find(int $id): Product|false {
-        return false;
-    }
-   
+
     /**
      * @return array All as array to be converted to JSON for responses.
      */
@@ -64,20 +61,38 @@ abstract class Product implements Arrayable {
 
         return false;
     }
-    
-    public static function orgAttrs(array $productAsArray): array {
-        return [];
+
+    public static function deleteMany(array $ids) {
+        foreach($ids as $id)
+        {
+            if(!Product::delete($id)) return false;
+        }
+        return true;
     }
 
     public function toArray(): array {
         return [];
     }
     
+    protected static function failIfSkuExists(string $sku) {
+        $conn = DB::connect();
+        $query = 'SELECT * FROM products WHERE sku = ?';
+        if($stmt=$conn->prepare($query)) {
+            $stmt->bind_param('s', $sku);
+            if ($stmt->execute()) {
+                $stmt->store_result();
+                if ($stmt->num_rows != 0) {
+                    throw new \Exception('SKU already exists.');
+                }
+            }
+        }
+    }
+
     // Setters
     public function setId(int $id) {
         $this->id = $id;
     }
-    public function setSKU(string $sku) {
+    public function setSku(string $sku) {
         $this->sku = $sku;
     }
     public function setName(string $name) {
@@ -95,7 +110,7 @@ abstract class Product implements Arrayable {
     public function getId(): int {
         return $this->id;
     }
-    public function getSKU(): string {
+    public function getSku(): string {
         return $this->sku;
     }
     public function getName(): string {

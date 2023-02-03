@@ -9,7 +9,7 @@ use Models\Furniture;
 use Models\Product;
 
 class ProductFactory {
-    public static function factory(?int $id, $sku, $name, string $price, $type, object|string $attrs): Product {
+    public static function factory(?int $id, string $sku, string $name, string $price, string $type, object|string $attrs): Product {
         if($type==ProductType::Furniture->name) $product = new Furniture;
         elseif($type==ProductType::Book->name) $product = new Book;
         elseif($type==ProductType::Dvd->name) $product = new Dvd;
@@ -17,8 +17,8 @@ class ProductFactory {
 
         if($id !== null) $product->setId($id);
 
-        $product->setSKU($sku);
-        $product->setSKU($sku);
+        $product->setSku($sku);
+        $product->setSku($sku);
         $product->setName($name);
         $product->setPrice($price);
         $product->setType($type);

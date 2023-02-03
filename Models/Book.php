@@ -25,12 +25,14 @@ class Book extends Product implements Arrayable {
     }
 
     public function save(): Product|false {
+        parent::failIfSkuExists($this->getSku());
+
         // Proceed
         $conn = DB::connect();
         $sql = "INSERT INTO products (sku, name, price, type, attrs) VALUES (?, ?, ?, ?, ?)";
         if ($stmt = $conn->prepare($sql)) {
             
-            $sku = $this->getSKU();
+            $sku = $this->getSku();
             $name = $this->getName();
             $price = $this->getPrice();
             $type = $this->getType();
@@ -61,7 +63,7 @@ class Book extends Product implements Arrayable {
     //         while ($row = $res->fetch_assoc()) {
     //             $book = new Book();
     //             $book->setId($row['id']);
-    //             $book->setSKU($row['sku']);
+    //             $book->setSku($row['sku']);
     //             $book->setName($row['name']);
     //             $book->setType($row['type']);
     //             $book->setPrice($row['price']);
@@ -86,7 +88,7 @@ class Book extends Product implements Arrayable {
     {
         return [
             'id' => $this->getId(),
-            'sku' => $this->getSKU(),
+            'sku' => $this->getSku(),
             'name' => $this->getName(),
             'price' => $this->getPrice(),
             'type' => $this->getType(),
