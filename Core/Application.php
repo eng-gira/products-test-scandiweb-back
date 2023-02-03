@@ -23,10 +23,10 @@ class Application
             $this->readEndPoint();
 
             if (!file_exists(CONTROLLER . $this->controller . ".php")) {
-                throw new \Exception("Controller does not exist.");
+                throw new \Exception("Controller " . $this->controller . " does not exist.");
             }
             if (!method_exists('\Controllers\\' . $this->controller, $this->action)) {
-                throw new \Exception("Action does not exist.");
+                throw new \Exception("Action " . $this->action . " does not exist.");
             }
 
             $controller = "\Controllers\\" . $this->controller;
