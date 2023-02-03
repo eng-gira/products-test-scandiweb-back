@@ -18,10 +18,7 @@ abstract class Product implements Arrayable {
         return false;
     }
 
-    /**
-     * @return array All as array to be converted to JSON for responses.
-     */
-    public static function allAsArray(): array|false {
+    public static function all(): array|false {
         $conn = DB::connect();
         $sql = "SELECT * FROM products";
         $res = $conn->query($sql);
@@ -37,9 +34,7 @@ abstract class Product implements Arrayable {
                     $row['attrs']
                 );
 
-                $productArr = $product->toArray();
-
-                array_push($products, $productArr);
+                array_push($products, $product);
             }
 
             return $products;
@@ -60,14 +55,6 @@ abstract class Product implements Arrayable {
         }
 
         return false;
-    }
-
-    public static function deleteMany(array $ids) {
-        foreach($ids as $id)
-        {
-            if(!Product::delete($id)) return false;
-        }
-        return true;
     }
 
     public function toArray(): array {

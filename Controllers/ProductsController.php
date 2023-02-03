@@ -5,12 +5,17 @@ namespace Controllers;
 use Factories\ProductFactory;
 use Inc\Utils;
 use Models\Product;
-use stdClass;
 
 class ProductsController {
     public static function index() {
         try {
-            echo json_encode(['data' => Product::allAsArray()]);
+            $products = Product::all();
+
+            $productsJsonable = array_map(function ($product) {
+                return $product->toArray();
+            }, $products);
+            echo json_encode(['data' => $productsJsonable]);
+
         } catch(\Exception $e) {
             http_response_code(500);
             echo json_encode(['message' => 'failed', 'data' => $e->getMessage()]);
@@ -43,11 +48,16 @@ class ProductsController {
     public static function massDelete() {
         try{
             $data = json_decode(file_get_contents("php://input"));
-            if(Product::deleteMany($data)) {
-                http_response_code(200);
-                echo json_encode(['message' => 'success', 'data' => 'Product(s) deleted successfully.']);
-            } 
-            else throw new \Exception('Delete attempt failed.');
+            
+            foreach($data as $id) {
+                if(!Product::delete($id))
+                {
+                    throw new \Exception('Delete attempt failed.');
+                }
+            }
+
+            http_response_code(200);
+            echo json_encode(['message' => 'success', 'data' => 'Product(s) deleted successfully.']);
         }
         catch(\Exception $e) {
             http_response_code(500);
