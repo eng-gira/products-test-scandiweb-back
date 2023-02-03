@@ -14,6 +14,7 @@ class ProductsController {
             $productsJsonable = array_map(function ($product) {
                 return $product->toArray();
             }, $products);
+            
             echo json_encode(['data' => $productsJsonable]);
 
         } catch(\Exception $e) {
